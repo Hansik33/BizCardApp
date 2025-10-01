@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "BizCardApp (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "BizCardApp (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
