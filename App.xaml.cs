@@ -1,6 +1,9 @@
-﻿using BizCardApp.Interfaces;
+﻿using BizCardApp.Data;
+using BizCardApp.Interfaces;
 using BizCardApp.Services;
 using BizCardApp.Views;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using System;
@@ -15,9 +18,10 @@ public partial class App : Application
     {
         InitializeComponent();
 
-        var services = new ServiceCollection();
-        ConfigureServices(services);
-        Services = services.BuildServiceProvider(new ServiceProviderOptions
+        var serviceCollection = new ServiceCollection();
+        ConfigureServices(serviceCollection);
+
+        Services = serviceCollection.BuildServiceProvider(new ServiceProviderOptions
         {
             ValidateOnBuild = true,
             ValidateScopes = true
@@ -26,12 +30,28 @@ public partial class App : Application
 
     private static void ConfigureServices(IServiceCollection services)
     {
-        services.AddSingleton<MainWindow>();
-        services.AddSingleton<AppStartupService>();
+        var config = new ConfigurationBuilder()
+            .SetBasePath(AppContext.BaseDirectory)
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .Build();
+
+        services.AddSingleton<IConfiguration>(config);
+
+        var connectionString = config.GetConnectionString("Default");
+
+        services.AddPooledDbContextFactory<AppDbContext>(options =>
+        {
+            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+        });
+
+        services.AddSingleton<IBusinessCardService, BusinessCardService>();
 
         services.AddSingleton<INavigationService, NavigationService>();
+        services.AddSingleton<AppStartupService>();
+
+        services.AddSingleton<MainWindow>();
     }
 
     protected override void OnLaunched(LaunchActivatedEventArgs args) =>
-        Services.GetRequiredService<AppStartupService>().Start();
+        _ = Services.GetRequiredService<AppStartupService>().StartAsync();
 }
