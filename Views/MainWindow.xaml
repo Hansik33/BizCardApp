@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Window
-    x:Class="BizCardApp.MainWindow"
+    x:Class="BizCardApp.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:BizCardApp"
@@ -14,6 +14,7 @@
     </Window.SystemBackdrop>
 
     <Grid>
-
+        <ContentControl x:Name="MainContent" x:FieldModifier="public"
+                        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
     </Grid>
 </Window>
