@@ -19,7 +19,6 @@ public sealed class AppStartupService(MainWindow mainWindow,
         _started = true;
 
         mainWindow.Activate();
-        navigationService.Initialize(mainWindow.MainContent);
 
         using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(5));
 
@@ -28,5 +27,8 @@ public sealed class AppStartupService(MainWindow mainWindow,
         catch { connected = false; }
 
         Debug.WriteLine(connected ? "DB: OK" : "DB: FAIL");
+
+        navigationService.Initialize(mainWindow.MainContent);
+        navigationService.GoToDashboard();
     }
 }

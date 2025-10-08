@@ -1,5 +1,6 @@
 ﻿using BizCardApp.Helpers;
 using BizCardApp.Interfaces;
+using BizCardApp.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using System;
@@ -23,4 +24,6 @@ public class NavigationService(IServiceProvider serviceProvider) : INavigationSe
 
         _host.Content = view;
     }
+
+    public void GoToDashboard() => NavigateTo<DashboardViewModel>();
 }
