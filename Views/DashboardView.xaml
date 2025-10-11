@@ -11,6 +11,116 @@
     d:DataContext="{d:DesignInstance Type=viewmodels:DashboardViewModel}">
 
     <Grid>
-        <TextBlock Text="Dashboard View" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24"/>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" BorderBrush="#DDDDDD" BorderThickness="0,0,1,0">
+            <ListBox ItemsSource="{Binding}"
+                     SelectedItem="{Binding Mode=TwoWay}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Border>
+
+        <StackPanel Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+            <TextBlock Text="Wizytówki" TextAlignment="Center" FontSize="28" FontWeight="Bold" Margin="0,0,0,30"/>
+
+            <Grid Margin="0,0,0,30" RowSpacing="20">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="300"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" 
+                           Text="Imię:" FontSize="14" FontWeight="SemiBold" 
+                           Margin="0,5,0,0" />
+                <TextBox Grid.Row="0" Grid.Column="1" 
+                         Text="" />
+
+                <TextBlock Grid.Row="1" Grid.Column="0" 
+                           Text="Nazwisko:" FontSize="14" FontWeight="SemiBold" 
+                           Margin="0,5,0,0" />
+                <TextBox Grid.Row="1" Grid.Column="1" 
+                         Text="" />
+
+                <TextBlock Grid.Row="2" Grid.Column="0" 
+                           Text="Firma:" FontSize="14" FontWeight="SemiBold" 
+                           Margin="0,5,0,0" />
+                <TextBox Grid.Row="2" Grid.Column="1" 
+                         Text="" />
+
+                <TextBlock Grid.Row="3" Grid.Column="0" 
+                           Text="Stanowisko:" FontSize="14" FontWeight="SemiBold" 
+                           Margin="0,5,0,0" />
+                <TextBox Grid.Row="3" Grid.Column="1" 
+                         Text="" />
+
+                <TextBlock Grid.Row="4" Grid.Column="0" 
+                           Text="Telefon:" FontSize="14" FontWeight="SemiBold" 
+                           Margin="0,5,0,0" />
+                <TextBox Grid.Row="4" Grid.Column="1" 
+                         Text="" 
+                         InputScope="TelephoneNumber"/>
+
+                <TextBlock Grid.Row="5" Grid.Column="0" 
+                           Text="E‑mail:" FontSize="14" FontWeight="SemiBold" 
+                           Margin="0,5,0,0" />
+                <TextBox Grid.Row="5" Grid.Column="1" 
+                         Text="" 
+                         InputScope="EmailSmtpAddress"/>
+
+                <TextBlock Grid.Row="6" Grid.Column="0" 
+                           Text="Adres:" FontSize="14" FontWeight="SemiBold"  
+                           Margin="0,5,0,0" />
+                <TextBox Grid.Row="6" Grid.Column="1" 
+                         Text="" 
+                         AcceptsReturn="True" TextWrapping="Wrap"/>
+
+            </Grid>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="15">
+
+                <Button Command="{Binding}" Width="48" Height="48" ToolTipService.ToolTip="Zapisz (Ctrl + S)">
+                    <Button.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="S" Modifiers="Control" />
+                    </Button.KeyboardAccelerators>
+                    <FontIcon Glyph="&#xE74E;" FontFamily="Segoe MDL2 Assets"/>
+                </Button>
+
+                <Button Command="{Binding}" Width="48" Height="48" ToolTipService.ToolTip="Dodaj (Ctrl + A)">
+                    <Button.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="A" Modifiers="Control" />
+                    </Button.KeyboardAccelerators>
+                    <FontIcon Glyph="&#xE8FA;" FontFamily="Segoe MDL2 Assets"/>
+                </Button>
+
+                <Button Command="{Binding}" Width="48" Height="48" ToolTipService.ToolTip="Usuń (Ctrl + D)">
+                    <Button.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="D" Modifiers="Control" />
+                    </Button.KeyboardAccelerators>
+                    <FontIcon Glyph="&#xE8F8;" FontFamily="Segoe MDL2 Assets"/>
+                </Button>
+
+            </StackPanel>
+        </StackPanel>
+
     </Grid>
 </UserControl>
