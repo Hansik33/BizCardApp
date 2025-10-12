@@ -13,31 +13,40 @@
     d:DataContext="{d:DesignInstance Type=viewmodels:DashboardViewModel}">
 
     <Grid>
-
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="250" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Border Grid.Column="0" BorderBrush="#DDDDDD" BorderThickness="0,0,1,0">
-            <ListBox ItemsSource="{Binding}"
-                     SelectedItem="{Binding Mode=TwoWay}">
+        <Border Grid.Column="0" 
+                BorderBrush="#DDDDDD" BorderThickness="0,0,1,0">
+            
+            <ListBox ItemsSource="{Binding BusinessCards}"
+                     SelectedItem="{Binding SelectedBusinessCard, Mode=TwoWay}">
                 <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding}" />
+                    <DataTemplate x:DataType="viewmodels:BusinessCardViewModel">
+                        <TextBlock Text="{x:Bind FullName, Mode=OneWay}" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+            
         </Border>
 
-        <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <StackPanel Grid.Column="1" 
+                    HorizontalAlignment="Center" VerticalAlignment="Center" 
+                    Spacing="15">
+            
+            <TextBlock Text="Wizytówki" TextAlignment="Center" 
+                       FontSize="28" FontWeight="Bold" 
+                       Margin="0,0,0,30"/>
 
-            <TextBlock Text="Wizytówki" TextAlignment="Center" FontSize="28" FontWeight="Bold" Margin="0,0,0,30"/>
+            <controls:BusinessCardForm DataContext="{Binding BusinessCardForm}" />
 
-            <controls:BusinessCardForm />
-
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="15">
-
+            <StackPanel Orientation="Horizontal" 
+                        HorizontalAlignment="Center" 
+                        Spacing="15">
+                
                 <Button Command="{Binding SaveChangesCommand}" 
                         Width="48" Height="48" 
                         ToolTipService.ToolTip="Zapisz (Ctrl + S)">
@@ -64,9 +73,9 @@
                     </Button.KeyboardAccelerators>
                     <FontIcon Glyph="&#xE8F8;" FontFamily="Segoe MDL2 Assets"/>
                 </Button>
-
+                
             </StackPanel>
         </StackPanel>
-
+        
     </Grid>
 </UserControl>

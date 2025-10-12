@@ -28,49 +28,49 @@
         </Grid.ColumnDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" 
-               Text="Imię:" FontSize="14" FontWeight="SemiBold" 
-               Margin="0,5,0,0" />
+                   Text="Imię:" FontSize="14" FontWeight="SemiBold" 
+                   Margin="0,5,0,0" />
         <TextBox Grid.Row="0" Grid.Column="1" 
-             Text="" />
+                 Text="{Binding FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
         <TextBlock Grid.Row="1" Grid.Column="0" 
-               Text="Nazwisko:" FontSize="14" FontWeight="SemiBold" 
-               Margin="0,5,0,0" />
+                   Text="Nazwisko:" FontSize="14" FontWeight="SemiBold" 
+                   Margin="0,5,0,0" />
         <TextBox Grid.Row="1" Grid.Column="1" 
-             Text="" />
+                 Text="{Binding LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
         <TextBlock Grid.Row="2" Grid.Column="0" 
-               Text="Firma:" FontSize="14" FontWeight="SemiBold" 
-               Margin="0,5,0,0" />
+                   Text="Firma:" FontSize="14" FontWeight="SemiBold" 
+                   Margin="0,5,0,0" />
         <TextBox Grid.Row="2" Grid.Column="1" 
-             Text="" />
+                 Text="{Binding Company, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
         <TextBlock Grid.Row="3" Grid.Column="0" 
-               Text="Stanowisko:" FontSize="14" FontWeight="SemiBold" 
-               Margin="0,5,0,0" />
+                   Text="Stanowisko:" FontSize="14" FontWeight="SemiBold" 
+                   Margin="0,5,0,0" />
         <TextBox Grid.Row="3" Grid.Column="1" 
-             Text="" />
+                 Text="{Binding JobTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
         <TextBlock Grid.Row="4" Grid.Column="0" 
-               Text="Telefon:" FontSize="14" FontWeight="SemiBold" 
-               Margin="0,5,0,0" />
+                   Text="Telefon:" FontSize="14" FontWeight="SemiBold" 
+                   Margin="0,5,0,0" />
         <TextBox Grid.Row="4" Grid.Column="1" 
-             Text="" 
-             InputScope="TelephoneNumber"/>
+                 Text="{Binding Phone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                 InputScope="TelephoneNumber"/>
 
         <TextBlock Grid.Row="5" Grid.Column="0" 
-               Text="E‑mail:" FontSize="14" FontWeight="SemiBold" 
-               Margin="0,5,0,0" />
+                   Text="E‑mail:" FontSize="14" FontWeight="SemiBold" 
+                   Margin="0,5,0,0" />
         <TextBox Grid.Row="5" Grid.Column="1" 
-             Text="" 
-             InputScope="EmailSmtpAddress"/>
+                 Text="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                 InputScope="EmailSmtpAddress"/>
 
         <TextBlock Grid.Row="6" Grid.Column="0" 
-               Text="Adres:" FontSize="14" FontWeight="SemiBold"  
-               Margin="0,5,0,0" />
+                   Text="Adres:" FontSize="14" FontWeight="SemiBold"  
+                   Margin="0,5,0,0" />
         <TextBox Grid.Row="6" Grid.Column="1" 
-             Text="" 
-             AcceptsReturn="True" TextWrapping="Wrap"/>
+                 Text="{Binding Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                 AcceptsReturn="True" TextWrapping="Wrap"/>
 
     </Grid>
 </UserControl>
