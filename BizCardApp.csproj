@@ -46,6 +46,12 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+	
+  <ItemGroup>
+    <Page Update="Controls\BusinessCardForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
 
   <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>

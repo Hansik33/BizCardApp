@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="BizCardApp.Controls.BusinessCardForm"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BizCardApp.Controls"
+    xmlns:viewmodels="using:BizCardApp.ViewModels"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=viewmodels:BusinessCardViewModel}">
+
+    <Grid Margin="0,0,0,30" RowSpacing="20">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="300"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" 
+               Text="Imię:" FontSize="14" FontWeight="SemiBold" 
+               Margin="0,5,0,0" />
+        <TextBox Grid.Row="0" Grid.Column="1" 
+             Text="" />
+
+        <TextBlock Grid.Row="1" Grid.Column="0" 
+               Text="Nazwisko:" FontSize="14" FontWeight="SemiBold" 
+               Margin="0,5,0,0" />
+        <TextBox Grid.Row="1" Grid.Column="1" 
+             Text="" />
+
+        <TextBlock Grid.Row="2" Grid.Column="0" 
+               Text="Firma:" FontSize="14" FontWeight="SemiBold" 
+               Margin="0,5,0,0" />
+        <TextBox Grid.Row="2" Grid.Column="1" 
+             Text="" />
+
+        <TextBlock Grid.Row="3" Grid.Column="0" 
+               Text="Stanowisko:" FontSize="14" FontWeight="SemiBold" 
+               Margin="0,5,0,0" />
+        <TextBox Grid.Row="3" Grid.Column="1" 
+             Text="" />
+
+        <TextBlock Grid.Row="4" Grid.Column="0" 
+               Text="Telefon:" FontSize="14" FontWeight="SemiBold" 
+               Margin="0,5,0,0" />
+        <TextBox Grid.Row="4" Grid.Column="1" 
+             Text="" 
+             InputScope="TelephoneNumber"/>
+
+        <TextBlock Grid.Row="5" Grid.Column="0" 
+               Text="E‑mail:" FontSize="14" FontWeight="SemiBold" 
+               Margin="0,5,0,0" />
+        <TextBox Grid.Row="5" Grid.Column="1" 
+             Text="" 
+             InputScope="EmailSmtpAddress"/>
+
+        <TextBlock Grid.Row="6" Grid.Column="0" 
+               Text="Adres:" FontSize="14" FontWeight="SemiBold"  
+               Margin="0,5,0,0" />
+        <TextBox Grid.Row="6" Grid.Column="1" 
+             Text="" 
+             AcceptsReturn="True" TextWrapping="Wrap"/>
+
+    </Grid>
+</UserControl>
