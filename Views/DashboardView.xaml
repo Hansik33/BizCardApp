@@ -38,21 +38,27 @@
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="15">
 
-                <Button Command="{Binding}" Width="48" Height="48" ToolTipService.ToolTip="Zapisz (Ctrl + S)">
+                <Button Command="{Binding SaveChangesCommand}" 
+                        Width="48" Height="48" 
+                        ToolTipService.ToolTip="Zapisz (Ctrl + S)">
                     <Button.KeyboardAccelerators>
                         <KeyboardAccelerator Key="S" Modifiers="Control" />
                     </Button.KeyboardAccelerators>
                     <FontIcon Glyph="&#xE74E;" FontFamily="Segoe MDL2 Assets"/>
                 </Button>
 
-                <Button Command="{Binding}" Width="48" Height="48" ToolTipService.ToolTip="Dodaj (Ctrl + A)">
+                <Button Command="{Binding AddBusinessCardCommand}" 
+                        Width="48" Height="48" 
+                        ToolTipService.ToolTip="Dodaj (Ctrl + A)">
                     <Button.KeyboardAccelerators>
                         <KeyboardAccelerator Key="A" Modifiers="Control" />
                     </Button.KeyboardAccelerators>
                     <FontIcon Glyph="&#xE8FA;" FontFamily="Segoe MDL2 Assets"/>
                 </Button>
 
-                <Button Command="{Binding}" Width="48" Height="48" ToolTipService.ToolTip="Usuń (Ctrl + D)">
+                <Button Command="{Binding DeleteBusinessCardCommand}" 
+                        Width="48" Height="48" 
+                        ToolTipService.ToolTip="Usuń (Ctrl + D)">
                     <Button.KeyboardAccelerators>
                         <KeyboardAccelerator Key="D" Modifiers="Control" />
                     </Button.KeyboardAccelerators>
