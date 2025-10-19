@@ -2,6 +2,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Input;
 
 namespace BizCardApp.ViewModels;
@@ -64,9 +65,10 @@ public partial class DashboardViewModel : BaseViewModel
 
     private void AddBusinessCard()
     {
-        var businessCardForm = BusinessCardForm;
+        var latestBusinessCardForm = BusinessCards.LastOrDefault() ?? NewBusinessCardDraft;
 
-        if (string.IsNullOrWhiteSpace(businessCardForm.FirstName) || string.IsNullOrWhiteSpace(businessCardForm.LastName))
+        if (string.IsNullOrWhiteSpace(latestBusinessCardForm.FirstName)
+            || string.IsNullOrWhiteSpace(latestBusinessCardForm.LastName))
             return;
 
         if (SelectedBusinessCard is null)
