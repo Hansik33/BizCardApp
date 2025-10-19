@@ -79,9 +79,20 @@ public partial class DashboardViewModel : BaseViewModel
 
     private void AddBusinessCard()
     {
-        var latestBusinessCardForm = BusinessCards.LastOrDefault() ?? NewBusinessCardDraft;
+        if (!ValidateAndHandleErrors())
+            return;
 
+        if (SelectedBusinessCard is null)
+            AddNewBusinessCard();
+        else
+            AddEmptyBusinessCard();
+    }
+
+    private bool ValidateAndHandleErrors()
+    {
+        var latestBusinessCardForm = BusinessCards.LastOrDefault() ?? NewBusinessCardDraft;
         var validation = BusinessCardValidator.Validate(latestBusinessCardForm);
+
         if (validation.Result == BusinessCardValidationResult.Failure)
         {
             if (validation.FirstNameError is not null)
@@ -93,25 +104,25 @@ public partial class DashboardViewModel : BaseViewModel
             if (SelectedBusinessCard is not null)
                 SelectedBusinessCard = latestBusinessCardForm;
 
-            return;
+            return false;
         }
+        return true;
+    }
 
-        if (SelectedBusinessCard is null)
-        {
-            var businessCard = _newBusinessCardDraft;
-            BusinessCards.Add(businessCard);
-            SelectedBusinessCard = businessCard;
+    private void AddNewBusinessCard()
+    {
+        var businessCard = _newBusinessCardDraft;
+        BusinessCards.Add(businessCard);
+        SelectedBusinessCard = businessCard;
+        _newBusinessCardDraft = new BusinessCardViewModel();
+        OnPropertyChanged(nameof(BusinessCardForm));
+    }
 
-            _newBusinessCardDraft = new BusinessCardViewModel();
-
-            OnPropertyChanged(nameof(BusinessCardForm));
-        }
-        else
-        {
-            var businessCard = new BusinessCardViewModel();
-            BusinessCards.Add(businessCard);
-            SelectedBusinessCard = businessCard;
-        }
+    private void AddEmptyBusinessCard()
+    {
+        var businessCard = new BusinessCardViewModel();
+        BusinessCards.Add(businessCard);
+        SelectedBusinessCard = businessCard;
     }
 
     private void DeleteBusinessCard()
