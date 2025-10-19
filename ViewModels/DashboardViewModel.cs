@@ -69,7 +69,11 @@ public partial class DashboardViewModel : BaseViewModel
 
         if (string.IsNullOrWhiteSpace(latestBusinessCardForm.FirstName)
             || string.IsNullOrWhiteSpace(latestBusinessCardForm.LastName))
+        {
+            if (SelectedBusinessCard is not null)
+                SelectedBusinessCard = latestBusinessCardForm;
             return;
+        }
 
         if (SelectedBusinessCard is null)
         {
