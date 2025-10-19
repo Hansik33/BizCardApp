@@ -1,4 +1,6 @@
-﻿using BizCardApp.Helpers;
+﻿using BizCardApp.Enums.ValidationResults;
+using BizCardApp.Helpers;
+using BizCardApp.Validators;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -54,7 +56,19 @@ public partial class DashboardViewModel : BaseViewModel
     {
         if (SelectedBusinessCard != null)
         {
-            Debug.WriteLine($"Godność: {SelectedBusinessCard.FirstName} {SelectedBusinessCard.LastName}\r\n" +
+            var validation = BusinessCardValidator.Validate(SelectedBusinessCard, BusinessCards);
+            if (validation.Result == BusinessCardValidationResult.Failure)
+            {
+                if (validation.FirstNameError is not null)
+                    Debug.WriteLine($"Błąd w imieniu: {validation.FirstNameError}");
+                if (validation.LastNameError is not null)
+                    Debug.WriteLine($"Błąd w nazwisku: {validation.LastNameError}");
+                if (validation.FullNameError is not null)
+                    Debug.WriteLine($"Błąd w nazwie: {validation.FullNameError}");
+                return;
+            }
+            else
+                Debug.WriteLine($"Godność: {SelectedBusinessCard.FirstName} {SelectedBusinessCard.LastName}\r\n" +
                 $"Firma: {SelectedBusinessCard.Company}\r\n" +
                 $"Stanowisko: {SelectedBusinessCard.JobTitle}\r\n" +
                 $"Telefon: {SelectedBusinessCard.Phone}\r\n" +
@@ -67,11 +81,18 @@ public partial class DashboardViewModel : BaseViewModel
     {
         var latestBusinessCardForm = BusinessCards.LastOrDefault() ?? NewBusinessCardDraft;
 
-        if (string.IsNullOrWhiteSpace(latestBusinessCardForm.FirstName)
-            || string.IsNullOrWhiteSpace(latestBusinessCardForm.LastName))
+        var validation = BusinessCardValidator.Validate(latestBusinessCardForm);
+        if (validation.Result == BusinessCardValidationResult.Failure)
         {
+            if (validation.FirstNameError is not null)
+                Debug.WriteLine($"Błąd w imieniu: {validation.FirstNameError}");
+
+            if (validation.LastNameError is not null)
+                Debug.WriteLine($"Błąd w nazwisku: {validation.LastNameError}");
+
             if (SelectedBusinessCard is not null)
                 SelectedBusinessCard = latestBusinessCardForm;
+
             return;
         }
 
