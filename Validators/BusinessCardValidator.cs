@@ -66,6 +66,14 @@ public static class BusinessCardValidator
             return outcome;
         }
 
+        var addressResult = AddressValidator.Validate(businessCard.Address);
+        if (addressResult is not (AddressValidationResult.Valid or AddressValidationResult.NotProvided))
+        {
+            outcome.Result = BusinessCardValidationResult.Failure;
+            outcome.AddressError = addressResult;
+            return outcome;
+        }
+
         return outcome;
     }
 
@@ -130,6 +138,14 @@ public static class BusinessCardValidator
         {
             outcome.Result = BusinessCardValidationResult.Failure;
             outcome.EmailError = emailResult;
+            return outcome;
+        }
+
+        var addressResult = AddressValidator.Validate(businessCard.Address);
+        if (addressResult is not (AddressValidationResult.Valid or AddressValidationResult.NotProvided))
+        {
+            outcome.Result = BusinessCardValidationResult.Failure;
+            outcome.AddressError = addressResult;
             return outcome;
         }
 

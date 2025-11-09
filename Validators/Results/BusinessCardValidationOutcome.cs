@@ -16,4 +16,5 @@ public class BusinessCardValidationOutcome
     public JobTitleValidationResult? JobTitleError { get; set; }
     public PhoneValidationResult? PhoneError { get; set; }
     public EmailValidationResult? EmailError { get; set; }
+    public AddressValidationResult? AddressError { get; set; }
 }
