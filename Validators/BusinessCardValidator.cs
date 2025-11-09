@@ -17,7 +17,7 @@ public static class BusinessCardValidator
         };
 
         var firstNameResult = FirstNameValidator.Validate(businessCard.FirstName);
-        if (firstNameResult != FirstNameValidationResult.Valid)
+        if (firstNameResult is not FirstNameValidationResult.Valid)
         {
             outcome.Result = BusinessCardValidationResult.Failure;
             outcome.FirstNameError = firstNameResult;
@@ -25,7 +25,7 @@ public static class BusinessCardValidator
         }
 
         var lastNameResult = LastNameValidator.Validate(businessCard.LastName);
-        if (lastNameResult != LastNameValidationResult.Valid)
+        if (lastNameResult is not LastNameValidationResult.Valid)
         {
             outcome.Result = BusinessCardValidationResult.Failure;
             outcome.LastNameError = lastNameResult;
@@ -35,8 +35,9 @@ public static class BusinessCardValidator
         return outcome;
     }
 
-    public static BusinessCardValidationOutcome Validate(BusinessCardViewModel businessCard,
-                                                         IEnumerable<BusinessCardViewModel> businessCards)
+    public static BusinessCardValidationOutcome Validate(
+        BusinessCardViewModel businessCard,
+        IEnumerable<BusinessCardViewModel> businessCards)
     {
         var outcome = new BusinessCardValidationOutcome
         {
@@ -44,7 +45,7 @@ public static class BusinessCardValidator
         };
 
         var firstNameResult = FirstNameValidator.Validate(businessCard.FirstName);
-        if (firstNameResult != FirstNameValidationResult.Valid)
+        if (firstNameResult is not FirstNameValidationResult.Valid)
         {
             outcome.Result = BusinessCardValidationResult.Failure;
             outcome.FirstNameError = firstNameResult;
@@ -52,7 +53,7 @@ public static class BusinessCardValidator
         }
 
         var lastNameResult = LastNameValidator.Validate(businessCard.LastName);
-        if (lastNameResult != LastNameValidationResult.Valid)
+        if (lastNameResult is not LastNameValidationResult.Valid)
         {
             outcome.Result = BusinessCardValidationResult.Failure;
             outcome.LastNameError = lastNameResult;
@@ -60,7 +61,7 @@ public static class BusinessCardValidator
         }
 
         var fullNameResult = FullNameValidator.Validate(businessCard.FullName, businessCards);
-        if (fullNameResult != FullNameValidationResult.Valid)
+        if (fullNameResult is not FullNameValidationResult.Valid)
         {
             outcome.Result = BusinessCardValidationResult.Failure;
             outcome.FullNameError = fullNameResult;
