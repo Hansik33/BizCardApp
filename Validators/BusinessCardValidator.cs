@@ -1,5 +1,7 @@
 ﻿using BizCardApp.Enums.ValidationResults;
+using BizCardApp.Enums.ValidationResults.Optional;
 using BizCardApp.Enums.ValidationResults.Required;
+using BizCardApp.Validators.Optional;
 using BizCardApp.Validators.Required;
 using BizCardApp.Validators.Results;
 using BizCardApp.ViewModels;
@@ -32,12 +34,19 @@ public static class BusinessCardValidator
             return outcome;
         }
 
+        var companyResult = CompanyValidator.Validate(businessCard.Company);
+        if (companyResult is not (CompanyValidationResult.Valid or CompanyValidationResult.NotProvided))
+        {
+            outcome.Result = BusinessCardValidationResult.Failure;
+            outcome.CompanyError = companyResult;
+            return outcome;
+        }
+
         return outcome;
     }
 
-    public static BusinessCardValidationOutcome Validate(
-        BusinessCardViewModel businessCard,
-        IEnumerable<BusinessCardViewModel> businessCards)
+    public static BusinessCardValidationOutcome Validate(BusinessCardViewModel businessCard,
+                                                         IEnumerable<BusinessCardViewModel> businessCards)
     {
         var outcome = new BusinessCardValidationOutcome
         {
@@ -65,6 +74,14 @@ public static class BusinessCardValidator
         {
             outcome.Result = BusinessCardValidationResult.Failure;
             outcome.FullNameError = fullNameResult;
+            return outcome;
+        }
+
+        var companyResult = CompanyValidator.Validate(businessCard.Company);
+        if (companyResult is not (CompanyValidationResult.Valid or CompanyValidationResult.NotProvided))
+        {
+            outcome.Result = BusinessCardValidationResult.Failure;
+            outcome.CompanyError = companyResult;
             return outcome;
         }
 
