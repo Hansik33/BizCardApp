@@ -50,6 +50,14 @@ public static class BusinessCardValidator
             return outcome;
         }
 
+        var phoneResult = PhoneValidator.Validate(businessCard.Phone);
+        if (phoneResult is not (PhoneValidationResult.Valid or PhoneValidationResult.NotProvided))
+        {
+            outcome.Result = BusinessCardValidationResult.Failure;
+            outcome.PhoneError = phoneResult;
+            return outcome;
+        }
+
         return outcome;
     }
 
@@ -98,6 +106,14 @@ public static class BusinessCardValidator
         {
             outcome.Result = BusinessCardValidationResult.Failure;
             outcome.JobTitleError = jobTitleResult;
+            return outcome;
+        }
+
+        var phoneResult = PhoneValidator.Validate(businessCard.Phone);
+        if (phoneResult is not (PhoneValidationResult.Valid or PhoneValidationResult.NotProvided))
+        {
+            outcome.Result = BusinessCardValidationResult.Failure;
+            outcome.PhoneError = phoneResult;
             return outcome;
         }
 
