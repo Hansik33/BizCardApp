@@ -58,6 +58,14 @@ public static class BusinessCardValidator
             return outcome;
         }
 
+        var emailResult = EmailValidator.Validate(businessCard.Email);
+        if (emailResult is not (EmailValidationResult.Valid or EmailValidationResult.NotProvided))
+        {
+            outcome.Result = BusinessCardValidationResult.Failure;
+            outcome.EmailError = emailResult;
+            return outcome;
+        }
+
         return outcome;
     }
 
@@ -114,6 +122,14 @@ public static class BusinessCardValidator
         {
             outcome.Result = BusinessCardValidationResult.Failure;
             outcome.PhoneError = phoneResult;
+            return outcome;
+        }
+
+        var emailResult = EmailValidator.Validate(businessCard.Email);
+        if (emailResult is not (EmailValidationResult.Valid or EmailValidationResult.NotProvided))
+        {
+            outcome.Result = BusinessCardValidationResult.Failure;
+            outcome.EmailError = emailResult;
             return outcome;
         }
 

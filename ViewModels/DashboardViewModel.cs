@@ -71,6 +71,8 @@ public partial class DashboardViewModel : BaseViewModel
                     Debug.WriteLine($"Błąd w stanowisku: {validation.JobTitleError}");
                 if (validation.PhoneError is not null)
                     Debug.WriteLine($"Błąd w telefonie: {validation.PhoneError}");
+                if (validation.EmailError is not null)
+                    Debug.WriteLine($"Błąd w e-mailu: {validation.EmailError}");
                 return;
             }
             else
@@ -115,6 +117,9 @@ public partial class DashboardViewModel : BaseViewModel
 
             if (validation.PhoneError is not null)
                 Debug.WriteLine($"Błąd w telefonie: {validation.PhoneError}");
+
+            if (validation.EmailError is not null)
+                Debug.WriteLine($"Błąd w e-mailu: {validation.EmailError}");
 
             if (SelectedBusinessCard is not null)
                 SelectedBusinessCard = latestBusinessCardForm;
