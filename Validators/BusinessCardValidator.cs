@@ -42,6 +42,14 @@ public static class BusinessCardValidator
             return outcome;
         }
 
+        var jobTitleResult = JobTitleValidator.Validate(businessCard.JobTitle);
+        if (jobTitleResult is not (JobTitleValidationResult.Valid or JobTitleValidationResult.NotProvided))
+        {
+            outcome.Result = BusinessCardValidationResult.Failure;
+            outcome.JobTitleError = jobTitleResult;
+            return outcome;
+        }
+
         return outcome;
     }
 
@@ -82,6 +90,14 @@ public static class BusinessCardValidator
         {
             outcome.Result = BusinessCardValidationResult.Failure;
             outcome.CompanyError = companyResult;
+            return outcome;
+        }
+
+        var jobTitleResult = JobTitleValidator.Validate(businessCard.JobTitle);
+        if (jobTitleResult is not (JobTitleValidationResult.Valid or JobTitleValidationResult.NotProvided))
+        {
+            outcome.Result = BusinessCardValidationResult.Failure;
+            outcome.JobTitleError = jobTitleResult;
             return outcome;
         }
 

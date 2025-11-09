@@ -13,4 +13,5 @@ public class BusinessCardValidationOutcome
     public FullNameValidationResult? FullNameError { get; set; }
 
     public CompanyValidationResult? CompanyError { get; set; }
+    public JobTitleValidationResult? JobTitleError { get; set; }
 }
