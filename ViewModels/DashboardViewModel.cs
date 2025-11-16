@@ -54,13 +54,13 @@ public partial class DashboardViewModel : BaseViewModel
     {
         _dialogService = dialogService;
 
-        SaveChangesCommand = new RelayCommand(async () => await SaveChanges(), () => SelectedBusinessCard is not null);
+        SaveChangesCommand = new RelayCommand(async () => await SaveChangesAsync(), () => SelectedBusinessCard is not null);
         AddBusinessCardCommand = new RelayCommand(async () => await AddBusinessCardAsync());
-        DeleteBusinessCardCommand = new RelayCommand(async () => await DeleteBusinessCard(),
+        DeleteBusinessCardCommand = new RelayCommand(async () => await DeleteBusinessCardAsync(),
             () => SelectedBusinessCard is not null);
     }
 
-    private async Task SaveChanges()
+    private async Task SaveChangesAsync()
     {
         if (SelectedBusinessCard is not null)
         {
@@ -93,7 +93,7 @@ public partial class DashboardViewModel : BaseViewModel
         await _dialogService.ShowMessageAsync(AppStrings.Dialogs.BusinessCard.AddSuccess, Enums.DialogType.Success);
     }
 
-    private async Task DeleteBusinessCard()
+    private async Task DeleteBusinessCardAsync()
     {
         if (SelectedBusinessCard is null)
             return;
