@@ -1,4 +1,5 @@
 ﻿using BizCardApp.Enums;
+using BizCardApp.Enums.ValidationResults.Optional;
 using BizCardApp.Enums.ValidationResults.Required;
 using BizCardApp.Interfaces;
 using BizCardApp.Resources;
@@ -89,7 +90,8 @@ public class DialogService : IDialogService
     {
         var message = HandleFirstNameErrors(validationOutcome) ??
                       HandleLastNameErrors(validationOutcome) ??
-                      HandleFullNameErrors(validationOutcome);
+                      HandleFullNameErrors(validationOutcome) ??
+                      HandleCompanyErrors(validationOutcome);
 
         if (message is not null)
         {
@@ -140,6 +142,21 @@ public class DialogService : IDialogService
             return validationOutcome.FullNameError switch
             {
                 FullNameValidationResult.NotUnique => AppStrings.Dialogs.BusinessCard.Required.FullName.NotUnique,
+                _ => null
+            };
+        }
+        return null;
+    }
+
+    private static string? HandleCompanyErrors(BusinessCardValidationOutcome validationOutcome)
+    {
+        if (validationOutcome.CompanyError is not null)
+        {
+            return validationOutcome.CompanyError switch
+            {
+                CompanyValidationResult.TooShort => AppStrings.Dialogs.BusinessCard.Optional.Company.TooShort,
+                CompanyValidationResult.TooLong => AppStrings.Dialogs.BusinessCard.Optional.Company.TooLong,
+                CompanyValidationResult.InvalidCharacters => AppStrings.Dialogs.BusinessCard.Optional.Company.InvalidCharacters,
                 _ => null
             };
         }
