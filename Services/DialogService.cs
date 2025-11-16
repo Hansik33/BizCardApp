@@ -92,7 +92,8 @@ public class DialogService : IDialogService
                       HandleLastNameErrors(validationOutcome) ??
                       HandleFullNameErrors(validationOutcome) ??
                       HandleCompanyErrors(validationOutcome) ??
-                      HandleJobTitleErrors(validationOutcome);
+                      HandleJobTitleErrors(validationOutcome) ??
+                      HandlePhoneErrors(validationOutcome);
 
         if (message is not null)
         {
@@ -173,6 +174,22 @@ public class DialogService : IDialogService
                 JobTitleValidationResult.TooShort => AppStrings.Dialogs.BusinessCard.Optional.JobTitle.TooShort,
                 JobTitleValidationResult.TooLong => AppStrings.Dialogs.BusinessCard.Optional.JobTitle.TooLong,
                 JobTitleValidationResult.InvalidCharacters => AppStrings.Dialogs.BusinessCard.Optional.JobTitle.InvalidCharacters,
+                _ => null
+            };
+        }
+        return null;
+    }
+
+    private static string? HandlePhoneErrors(BusinessCardValidationOutcome validationOutcome)
+    {
+        if (validationOutcome.PhoneError is not null)
+        {
+            return validationOutcome.PhoneError switch
+            {
+                PhoneValidationResult.TooShort => AppStrings.Dialogs.BusinessCard.Optional.Phone.TooShort,
+                PhoneValidationResult.TooLong => AppStrings.Dialogs.BusinessCard.Optional.Phone.TooLong,
+                PhoneValidationResult.InvalidCharacters => AppStrings.Dialogs.BusinessCard.Optional.Phone.InvalidCharacters,
+                PhoneValidationResult.InvalidFormat => AppStrings.Dialogs.BusinessCard.Optional.Phone.InvalidFormat,
                 _ => null
             };
         }
