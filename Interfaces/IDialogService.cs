@@ -1,4 +1,5 @@
 ﻿using BizCardApp.Enums;
+using BizCardApp.Validators.Results;
 using Microsoft.UI.Xaml;
 using System.Threading.Tasks;
 
@@ -11,4 +12,6 @@ public interface IDialogService
     Task ShowMessageAsync(string message, DialogType dialogType = DialogType.Info);
     Task<bool> ShowConfirmationAsync(string message);
     Task ShowInfoAsync();
+
+    Task ShowErrorAsync(BusinessCardValidationOutcome validationOutcome);
 }

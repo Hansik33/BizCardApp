@@ -64,7 +64,7 @@ public partial class DashboardViewModel : BaseViewModel
     {
         if (SelectedBusinessCard is not null)
         {
-            if (!ValidateAndHandleErrorsBeforeSave())
+            if (!await ValidateAndHandleErrorsBeforeSaveAsync())
                 return;
             else
             {
@@ -82,7 +82,7 @@ public partial class DashboardViewModel : BaseViewModel
 
     private async Task AddBusinessCardAsync()
     {
-        if (!ValidateAndHandleErrorsBeforeAdd())
+        if (!await ValidateAndHandleErrorsBeforeAddAsync())
             return;
 
         if (SelectedBusinessCard is null)
@@ -112,7 +112,7 @@ public partial class DashboardViewModel : BaseViewModel
         await _dialogService.ShowMessageAsync(AppStrings.Dialogs.BusinessCard.DeleteSuccess, Enums.DialogType.Success);
     }
 
-    private bool ValidateAndHandleErrorsBeforeSave()
+    private async Task<bool> ValidateAndHandleErrorsBeforeSaveAsync()
     {
         if (SelectedBusinessCard is null)
             return false;
@@ -121,12 +121,13 @@ public partial class DashboardViewModel : BaseViewModel
 
         if (validationOutcome.Result is BusinessCardValidationResult.Failure)
         {
+            await _dialogService.ShowErrorAsync(validationOutcome);
             return false;
         }
         return true;
     }
 
-    private bool ValidateAndHandleErrorsBeforeAdd()
+    private async Task<bool> ValidateAndHandleErrorsBeforeAddAsync()
     {
         var latestBusinessCardForm = BusinessCards.LastOrDefault() ?? NewBusinessCardDraft;
         if (SelectedBusinessCard is not null)
@@ -136,6 +137,7 @@ public partial class DashboardViewModel : BaseViewModel
 
         if (validationOutcome.Result is BusinessCardValidationResult.Failure)
         {
+            await _dialogService.ShowErrorAsync(validationOutcome);
             return false;
         }
         return true;

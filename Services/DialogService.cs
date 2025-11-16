@@ -1,6 +1,8 @@
 ﻿using BizCardApp.Enums;
+using BizCardApp.Enums.ValidationResults.Required;
 using BizCardApp.Interfaces;
 using BizCardApp.Resources;
+using BizCardApp.Validators.Results;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
@@ -81,5 +83,34 @@ public class DialogService : IDialogService
         var result = await dialog.ShowAsync();
         if (result == ContentDialogResult.Primary)
             await Launcher.LaunchUriAsync(new Uri("https://github.com/Hansik33/BizCardApp"));
+    }
+
+    public async Task ShowErrorAsync(BusinessCardValidationOutcome validationOutcome)
+    {
+        var message = HandleFirstNameErrors(validationOutcome);
+
+        if (message is not null)
+        {
+            await ShowMessageAsync(message, DialogType.Error);
+            return;
+        }
+        return;
+    }
+
+    private static string? HandleFirstNameErrors(BusinessCardValidationOutcome validationOutcome)
+    {
+        if (validationOutcome.FirstNameError is not null)
+        {
+            return validationOutcome.FirstNameError switch
+            {
+                FirstNameValidationResult.Empty => AppStrings.Dialogs.BusinessCard.Required.FirstName.Empty,
+                FirstNameValidationResult.TooLong => AppStrings.Dialogs.BusinessCard.Required.FirstName.TooLong,
+                FirstNameValidationResult.TooShort => AppStrings.Dialogs.BusinessCard.Required.FirstName.TooShort,
+                FirstNameValidationResult.InvalidCharacters =>
+                AppStrings.Dialogs.BusinessCard.Required.FirstName.InvalidCharacters,
+                _ => null
+            };
+        }
+        return null;
     }
 }
