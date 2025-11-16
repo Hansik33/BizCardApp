@@ -5,6 +5,6 @@ public enum EmailValidationResult
     Valid,
     NotProvided,
     TooLong,
-    InvalidFormat,
-    InvalidCharacters
+    InvalidCharacters,
+    InvalidFormat
 }
