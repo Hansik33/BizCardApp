@@ -1,11 +1,13 @@
 ﻿using BizCardApp.Enums.ValidationResults;
 using BizCardApp.Helpers;
 using BizCardApp.Interfaces;
+using BizCardApp.Resources;
 using BizCardApp.Validators;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace BizCardApp.ViewModels;
@@ -52,28 +54,33 @@ public partial class DashboardViewModel : BaseViewModel
     {
         _dialogService = dialogService;
 
-        SaveChangesCommand = new RelayCommand(SaveChanges, () => SelectedBusinessCard is not null);
-        AddBusinessCardCommand = new RelayCommand(AddBusinessCard);
-        DeleteBusinessCardCommand = new RelayCommand(DeleteBusinessCard, () => SelectedBusinessCard is not null);
+        SaveChangesCommand = new RelayCommand(async () => await SaveChanges(), () => SelectedBusinessCard is not null);
+        AddBusinessCardCommand = new RelayCommand(async () => await AddBusinessCardAsync());
+        DeleteBusinessCardCommand = new RelayCommand(async () => await DeleteBusinessCard(),
+            () => SelectedBusinessCard is not null);
     }
 
-    private void SaveChanges()
+    private async Task SaveChanges()
     {
         if (SelectedBusinessCard is not null)
         {
             if (!ValidateAndHandleErrorsBeforeSave())
                 return;
             else
+            {
                 Debug.WriteLine($"Godność: {SelectedBusinessCard.FirstName} {SelectedBusinessCard.LastName}\r\n" +
                 $"Firma: {SelectedBusinessCard.Company}\r\n" +
                 $"Stanowisko: {SelectedBusinessCard.JobTitle}\r\n" +
                 $"Telefon: {SelectedBusinessCard.Phone}\r\n" +
                 $"E-mail: {SelectedBusinessCard.Email}\r\n" +
                 $"Adres: {SelectedBusinessCard.Address}");
+
+                await _dialogService.ShowMessageAsync(AppStrings.Dialogs.BusinessCard.UpdateSuccess, Enums.DialogType.Success);
+            }
         }
     }
 
-    private void AddBusinessCard()
+    private async Task AddBusinessCardAsync()
     {
         if (!ValidateAndHandleErrorsBeforeAdd())
             return;
@@ -82,11 +89,17 @@ public partial class DashboardViewModel : BaseViewModel
             AddNewBusinessCard();
         else
             AddEmptyBusinessCard();
+
+        await _dialogService.ShowMessageAsync(AppStrings.Dialogs.BusinessCard.AddSuccess, Enums.DialogType.Success);
     }
 
-    private void DeleteBusinessCard()
+    private async Task DeleteBusinessCard()
     {
-        if (SelectedBusinessCard is null) return;
+        if (SelectedBusinessCard is null)
+            return;
+
+        if (!await _dialogService.ShowConfirmationAsync(AppStrings.Dialogs.BusinessCard.DeleteConfirmation))
+            return;
 
         var index = BusinessCards.IndexOf(SelectedBusinessCard);
 
@@ -95,6 +108,8 @@ public partial class DashboardViewModel : BaseViewModel
         SelectedBusinessCard = BusinessCards.Count == 0
             ? null
             : BusinessCards[Math.Clamp(index - 1, 0, BusinessCards.Count - 1)];
+
+        await _dialogService.ShowMessageAsync(AppStrings.Dialogs.BusinessCard.DeleteSuccess, Enums.DialogType.Success);
     }
 
     private bool ValidateAndHandleErrorsBeforeSave()
