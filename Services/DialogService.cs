@@ -94,7 +94,8 @@ public class DialogService : IDialogService
                       HandleCompanyErrors(validationOutcome) ??
                       HandleJobTitleErrors(validationOutcome) ??
                       HandlePhoneErrors(validationOutcome) ??
-                      HandleEmailErrors(validationOutcome);
+                      HandleEmailErrors(validationOutcome) ??
+                      HandleAddressErrors(validationOutcome);
 
         if (message is not null)
         {
@@ -206,6 +207,22 @@ public class DialogService : IDialogService
                 EmailValidationResult.TooLong => AppStrings.Dialogs.BusinessCard.Optional.Email.TooLong,
                 EmailValidationResult.InvalidCharacters => AppStrings.Dialogs.BusinessCard.Optional.Email.InvalidCharacters,
                 EmailValidationResult.InvalidFormat => AppStrings.Dialogs.BusinessCard.Optional.Email.InvalidFormat,
+                _ => null
+            };
+        }
+        return null;
+    }
+
+    private static string? HandleAddressErrors(BusinessCardValidationOutcome validationOutcome)
+    {
+        if (validationOutcome.AddressError is not null)
+        {
+            return validationOutcome.AddressError switch
+            {
+                AddressValidationResult.TooShort => AppStrings.Dialogs.BusinessCard.Optional.Address.TooShort,
+                AddressValidationResult.TooLong => AppStrings.Dialogs.BusinessCard.Optional.Address.TooLong,
+                AddressValidationResult.InvalidCharacters => AppStrings.Dialogs.BusinessCard.Optional.Address.InvalidCharacters,
+                AddressValidationResult.InvalidFormat => AppStrings.Dialogs.BusinessCard.Optional.Address.InvalidFormat,
                 _ => null
             };
         }
