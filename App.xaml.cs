@@ -44,6 +44,7 @@ public partial class App : Application
 
         services.AddSingleton<IBusinessCardService, BusinessCardService>();
         services.AddSingleton<INavigationService, NavigationService>();
+        services.AddSingleton<IDialogService, DialogService>();
         services.AddSingleton<AppStartupService>();
 
         services.AddSingleton<MainWindow>();

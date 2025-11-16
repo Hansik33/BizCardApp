@@ -1,5 +1,6 @@
 ﻿using BizCardApp.Enums.ValidationResults;
 using BizCardApp.Helpers;
+using BizCardApp.Interfaces;
 using BizCardApp.Validators;
 using System;
 using System.Collections.ObjectModel;
@@ -11,6 +12,8 @@ namespace BizCardApp.ViewModels;
 
 public partial class DashboardViewModel : BaseViewModel
 {
+    private readonly IDialogService _dialogService;
+
     public ObservableCollection<BusinessCardViewModel> BusinessCards { get; } = [];
 
     public BusinessCardViewModel BusinessCardForm => SelectedBusinessCard ?? NewBusinessCardDraft;
@@ -45,8 +48,10 @@ public partial class DashboardViewModel : BaseViewModel
     public ICommand AddBusinessCardCommand { get; }
     public ICommand DeleteBusinessCardCommand { get; }
 
-    public DashboardViewModel()
+    public DashboardViewModel(IDialogService dialogService)
     {
+        _dialogService = dialogService;
+
         SaveChangesCommand = new RelayCommand(SaveChanges, () => SelectedBusinessCard is not null);
         AddBusinessCardCommand = new RelayCommand(AddBusinessCard);
         DeleteBusinessCardCommand = new RelayCommand(DeleteBusinessCard, () => SelectedBusinessCard is not null);
@@ -58,25 +63,7 @@ public partial class DashboardViewModel : BaseViewModel
         {
             var validation = BusinessCardValidator.Validate(SelectedBusinessCard, BusinessCards);
             if (validation.Result == BusinessCardValidationResult.Failure)
-            {
-                if (validation.FirstNameError is not null)
-                    Debug.WriteLine($"Błąd w imieniu: {validation.FirstNameError}");
-                if (validation.LastNameError is not null)
-                    Debug.WriteLine($"Błąd w nazwisku: {validation.LastNameError}");
-                if (validation.FullNameError is not null)
-                    Debug.WriteLine($"Błąd w nazwie: {validation.FullNameError}");
-                if (validation.CompanyError is not null)
-                    Debug.WriteLine($"Błąd w firmie: {validation.CompanyError}");
-                if (validation.JobTitleError is not null)
-                    Debug.WriteLine($"Błąd w stanowisku: {validation.JobTitleError}");
-                if (validation.PhoneError is not null)
-                    Debug.WriteLine($"Błąd w telefonie: {validation.PhoneError}");
-                if (validation.EmailError is not null)
-                    Debug.WriteLine($"Błąd w e-mailu: {validation.EmailError}");
-                if (validation.AddressError is not null)
-                    Debug.WriteLine($"Błąd w adresie: {validation.AddressError}");
                 return;
-            }
             else
                 Debug.WriteLine($"Godność: {SelectedBusinessCard.FirstName} {SelectedBusinessCard.LastName}\r\n" +
                 $"Firma: {SelectedBusinessCard.Company}\r\n" +
@@ -105,27 +92,6 @@ public partial class DashboardViewModel : BaseViewModel
 
         if (validation.Result == BusinessCardValidationResult.Failure)
         {
-            if (validation.FirstNameError is not null)
-                Debug.WriteLine($"Błąd w imieniu: {validation.FirstNameError}");
-
-            if (validation.LastNameError is not null)
-                Debug.WriteLine($"Błąd w nazwisku: {validation.LastNameError}");
-
-            if (validation.CompanyError is not null)
-                Debug.WriteLine($"Błąd w firmie: {validation.CompanyError}");
-
-            if (validation.JobTitleError is not null)
-                Debug.WriteLine($"Błąd w stanowisku: {validation.JobTitleError}");
-
-            if (validation.PhoneError is not null)
-                Debug.WriteLine($"Błąd w telefonie: {validation.PhoneError}");
-
-            if (validation.EmailError is not null)
-                Debug.WriteLine($"Błąd w e-mailu: {validation.EmailError}");
-
-            if (validation.AddressError is not null)
-                Debug.WriteLine($"Błąd w adresie: {validation.AddressError}");
-
             if (SelectedBusinessCard is not null)
                 SelectedBusinessCard = latestBusinessCardForm;
 
