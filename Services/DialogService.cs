@@ -87,7 +87,8 @@ public class DialogService : IDialogService
 
     public async Task ShowErrorAsync(BusinessCardValidationOutcome validationOutcome)
     {
-        var message = HandleFirstNameErrors(validationOutcome);
+        var message = HandleFirstNameErrors(validationOutcome) ??
+                      HandleLastNameErrors(validationOutcome);
 
         if (message is not null)
         {
@@ -108,6 +109,23 @@ public class DialogService : IDialogService
                 FirstNameValidationResult.TooShort => AppStrings.Dialogs.BusinessCard.Required.FirstName.TooShort,
                 FirstNameValidationResult.InvalidCharacters =>
                 AppStrings.Dialogs.BusinessCard.Required.FirstName.InvalidCharacters,
+                _ => null
+            };
+        }
+        return null;
+    }
+
+    private static string? HandleLastNameErrors(BusinessCardValidationOutcome validationOutcome)
+    {
+        if (validationOutcome.LastNameError is not null)
+        {
+            return validationOutcome.LastNameError switch
+            {
+                LastNameValidationResult.Empty => AppStrings.Dialogs.BusinessCard.Required.LastName.Empty,
+                LastNameValidationResult.TooLong => AppStrings.Dialogs.BusinessCard.Required.LastName.TooLong,
+                LastNameValidationResult.TooShort => AppStrings.Dialogs.BusinessCard.Required.LastName.TooShort,
+                LastNameValidationResult.InvalidCharacters =>
+                AppStrings.Dialogs.BusinessCard.Required.LastName.InvalidCharacters,
                 _ => null
             };
         }
