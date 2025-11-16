@@ -59,10 +59,9 @@ public partial class DashboardViewModel : BaseViewModel
 
     private void SaveChanges()
     {
-        if (SelectedBusinessCard != null)
+        if (SelectedBusinessCard is not null)
         {
-            var validation = BusinessCardValidator.Validate(SelectedBusinessCard, BusinessCards);
-            if (validation.Result == BusinessCardValidationResult.Failure)
+            if (!ValidateAndHandleErrorsBeforeSave())
                 return;
             else
                 Debug.WriteLine($"Godność: {SelectedBusinessCard.FirstName} {SelectedBusinessCard.LastName}\r\n" +
@@ -76,7 +75,7 @@ public partial class DashboardViewModel : BaseViewModel
 
     private void AddBusinessCard()
     {
-        if (!ValidateAndHandleErrors())
+        if (!ValidateAndHandleErrorsBeforeAdd())
             return;
 
         if (SelectedBusinessCard is null)
@@ -85,16 +84,43 @@ public partial class DashboardViewModel : BaseViewModel
             AddEmptyBusinessCard();
     }
 
-    private bool ValidateAndHandleErrors()
+    private void DeleteBusinessCard()
+    {
+        if (SelectedBusinessCard is null) return;
+
+        var index = BusinessCards.IndexOf(SelectedBusinessCard);
+
+        BusinessCards.Remove(SelectedBusinessCard);
+
+        SelectedBusinessCard = BusinessCards.Count == 0
+            ? null
+            : BusinessCards[Math.Clamp(index - 1, 0, BusinessCards.Count - 1)];
+    }
+
+    private bool ValidateAndHandleErrorsBeforeSave()
+    {
+        if (SelectedBusinessCard is null)
+            return false;
+
+        var validationOutcome = BusinessCardValidator.Validate(SelectedBusinessCard, BusinessCards);
+
+        if (validationOutcome.Result is BusinessCardValidationResult.Failure)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    private bool ValidateAndHandleErrorsBeforeAdd()
     {
         var latestBusinessCardForm = BusinessCards.LastOrDefault() ?? NewBusinessCardDraft;
-        var validation = BusinessCardValidator.Validate(latestBusinessCardForm);
+        if (SelectedBusinessCard is not null)
+            SelectedBusinessCard = latestBusinessCardForm;
 
-        if (validation.Result == BusinessCardValidationResult.Failure)
+        var validationOutcome = BusinessCardValidator.Validate(latestBusinessCardForm);
+
+        if (validationOutcome.Result is BusinessCardValidationResult.Failure)
         {
-            if (SelectedBusinessCard is not null)
-                SelectedBusinessCard = latestBusinessCardForm;
-
             return false;
         }
         return true;
@@ -114,18 +140,5 @@ public partial class DashboardViewModel : BaseViewModel
         var businessCard = new BusinessCardViewModel();
         BusinessCards.Add(businessCard);
         SelectedBusinessCard = businessCard;
-    }
-
-    private void DeleteBusinessCard()
-    {
-        if (SelectedBusinessCard is null) return;
-
-        var index = BusinessCards.IndexOf(SelectedBusinessCard);
-
-        BusinessCards.Remove(SelectedBusinessCard);
-
-        SelectedBusinessCard = BusinessCards.Count == 0
-            ? null
-            : BusinessCards[Math.Clamp(index - 1, 0, BusinessCards.Count - 1)];
     }
 }
