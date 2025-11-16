@@ -91,7 +91,8 @@ public class DialogService : IDialogService
         var message = HandleFirstNameErrors(validationOutcome) ??
                       HandleLastNameErrors(validationOutcome) ??
                       HandleFullNameErrors(validationOutcome) ??
-                      HandleCompanyErrors(validationOutcome);
+                      HandleCompanyErrors(validationOutcome) ??
+                      HandleJobTitleErrors(validationOutcome);
 
         if (message is not null)
         {
@@ -157,6 +158,21 @@ public class DialogService : IDialogService
                 CompanyValidationResult.TooShort => AppStrings.Dialogs.BusinessCard.Optional.Company.TooShort,
                 CompanyValidationResult.TooLong => AppStrings.Dialogs.BusinessCard.Optional.Company.TooLong,
                 CompanyValidationResult.InvalidCharacters => AppStrings.Dialogs.BusinessCard.Optional.Company.InvalidCharacters,
+                _ => null
+            };
+        }
+        return null;
+    }
+
+    private static string? HandleJobTitleErrors(BusinessCardValidationOutcome validationOutcome)
+    {
+        if (validationOutcome.JobTitleError is not null)
+        {
+            return validationOutcome.JobTitleError switch
+            {
+                JobTitleValidationResult.TooShort => AppStrings.Dialogs.BusinessCard.Optional.JobTitle.TooShort,
+                JobTitleValidationResult.TooLong => AppStrings.Dialogs.BusinessCard.Optional.JobTitle.TooLong,
+                JobTitleValidationResult.InvalidCharacters => AppStrings.Dialogs.BusinessCard.Optional.JobTitle.InvalidCharacters,
                 _ => null
             };
         }
