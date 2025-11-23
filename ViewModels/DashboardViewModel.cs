@@ -1,11 +1,11 @@
 ﻿using BizCardApp.Enums.ValidationResults;
 using BizCardApp.Helpers;
 using BizCardApp.Interfaces;
+using BizCardApp.Mappers;
 using BizCardApp.Resources;
 using BizCardApp.Validators;
 using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -14,6 +14,7 @@ namespace BizCardApp.ViewModels;
 
 public partial class DashboardViewModel : BaseViewModel
 {
+    private readonly IBusinessCardService _businessCardService;
     private readonly IDialogService _dialogService;
 
     public ObservableCollection<BusinessCardViewModel> BusinessCards { get; } = [];
@@ -50,17 +51,20 @@ public partial class DashboardViewModel : BaseViewModel
     public ICommand AddBusinessCardCommand { get; }
     public ICommand DeleteBusinessCardCommand { get; }
 
-    public DashboardViewModel(IDialogService dialogService)
+    public DashboardViewModel(IBusinessCardService businessCardService,
+                              IDialogService dialogService)
     {
+        _businessCardService = businessCardService;
         _dialogService = dialogService;
 
-        SaveChangesCommand = new RelayCommand(async () => await SaveChangesAsync(), () => SelectedBusinessCard is not null);
+        SaveChangesCommand = new RelayCommand(async () => await SaveChangesAsync(fromCommand: true),
+            () => SelectedBusinessCard is not null);
         AddBusinessCardCommand = new RelayCommand(async () => await AddBusinessCardAsync());
         DeleteBusinessCardCommand = new RelayCommand(async () => await DeleteBusinessCardAsync(),
             () => SelectedBusinessCard is not null);
     }
 
-    private async Task SaveChangesAsync()
+    private async Task SaveChangesAsync(bool fromCommand = false)
     {
         if (SelectedBusinessCard is not null)
         {
@@ -68,14 +72,15 @@ public partial class DashboardViewModel : BaseViewModel
                 return;
             else
             {
-                Debug.WriteLine($"Godność: {SelectedBusinessCard.FirstName} {SelectedBusinessCard.LastName}\r\n" +
-                $"Firma: {SelectedBusinessCard.Company}\r\n" +
-                $"Stanowisko: {SelectedBusinessCard.JobTitle}\r\n" +
-                $"Telefon: {SelectedBusinessCard.Phone}\r\n" +
-                $"E-mail: {SelectedBusinessCard.Email}\r\n" +
-                $"Adres: {SelectedBusinessCard.Address}");
+                var entity = BusinessCardMapper.ToEntity(BusinessCardForm);
+                var created = await _businessCardService.SaveBusinessCardAsync(entity);
 
-                await _dialogService.ShowMessageAsync(AppStrings.Dialogs.BusinessCard.UpdateSuccess, Enums.DialogType.Success);
+                if (created is null)
+                    return;
+
+                if (fromCommand)
+                    await _dialogService.ShowMessageAsync(AppStrings.Dialogs.BusinessCard.UpdateSuccess,
+                                                          Enums.DialogType.Success);
             }
         }
     }
@@ -86,7 +91,10 @@ public partial class DashboardViewModel : BaseViewModel
             return;
 
         if (SelectedBusinessCard is null)
+        {
             AddNewBusinessCard();
+            await SaveChangesAsync();
+        }
         else
             AddEmptyBusinessCard();
 
