@@ -2,6 +2,14 @@
 
 public partial class BusinessCardViewModel : BaseViewModel
 {
+
+    private int _id;
+    public int Id
+    {
+        get => _id;
+        set => SetProperty(ref _id, value);
+    }
+
     public string FullName => $"{FirstName} {LastName}".Trim();
 
     private string _firstName = string.Empty;

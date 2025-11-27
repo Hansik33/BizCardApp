@@ -7,6 +7,7 @@ public static class BusinessCardMapper
 {
     public static BusinessCard ToEntity(BusinessCardViewModel viewModel) => new()
     {
+        Id = viewModel.Id,
         FirstName = viewModel.FirstName,
         LastName = viewModel.LastName,
         Company = viewModel.Company,
@@ -18,6 +19,7 @@ public static class BusinessCardMapper
 
     public static BusinessCardViewModel ToViewModel(BusinessCard entity) => new()
     {
+        Id = entity.Id,
         FirstName = entity.FirstName,
         LastName = entity.LastName,
         Company = entity.Company,

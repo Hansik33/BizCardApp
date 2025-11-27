@@ -95,6 +95,8 @@ public partial class DashboardViewModel : BaseViewModel, IAsyncInitializable
                 if (created is null)
                     return;
 
+                SelectedBusinessCard.Id = created.Id;
+
                 if (fromCommand)
                     await _dialogService.ShowMessageAsync(AppStrings.Dialogs.BusinessCard.UpdateSuccess,
                                                           Enums.DialogType.Success);
@@ -126,15 +128,19 @@ public partial class DashboardViewModel : BaseViewModel, IAsyncInitializable
         if (!await _dialogService.ShowConfirmationAsync(AppStrings.Dialogs.BusinessCard.DeleteConfirmation))
             return;
 
-        var index = BusinessCards.IndexOf(SelectedBusinessCard);
+        if (SelectedBusinessCard.Id > 0)
+        {
+            var deleted = await _businessCardService.DeleteBusinessCardAsync(SelectedBusinessCard.Id);
 
-        BusinessCards.Remove(SelectedBusinessCard);
+            if (!deleted)
+                return;
+        }
 
-        SelectedBusinessCard = BusinessCards.Count == 0
-            ? null
-            : BusinessCards[Math.Clamp(index - 1, 0, BusinessCards.Count - 1)];
+        DeleteBusinessCard();
 
-        await _dialogService.ShowMessageAsync(AppStrings.Dialogs.BusinessCard.DeleteSuccess, Enums.DialogType.Success);
+        await _dialogService.ShowMessageAsync(
+            AppStrings.Dialogs.BusinessCard.DeleteSuccess,
+            Enums.DialogType.Success);
     }
 
     private async Task<bool> ValidateAndHandleErrorsBeforeSaveAsync()
@@ -182,5 +188,19 @@ public partial class DashboardViewModel : BaseViewModel, IAsyncInitializable
         var businessCard = new BusinessCardViewModel();
         BusinessCards.Add(businessCard);
         SelectedBusinessCard = businessCard;
+    }
+
+    private void DeleteBusinessCard()
+    {
+        if (SelectedBusinessCard is null)
+            return;
+
+        var index = BusinessCards.IndexOf(SelectedBusinessCard);
+
+        BusinessCards.Remove(SelectedBusinessCard);
+
+        SelectedBusinessCard = BusinessCards.Count == 0
+            ? null
+            : BusinessCards[Math.Clamp(index - 1, 0, BusinessCards.Count - 1)];
     }
 }
