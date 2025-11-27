@@ -12,7 +12,7 @@ using System.Windows.Input;
 
 namespace BizCardApp.ViewModels;
 
-public partial class DashboardViewModel : BaseViewModel
+public partial class DashboardViewModel : BaseViewModel, IAsyncInitializable
 {
     private readonly IBusinessCardService _businessCardService;
     private readonly IDialogService _dialogService;
@@ -62,6 +62,23 @@ public partial class DashboardViewModel : BaseViewModel
         AddBusinessCardCommand = new RelayCommand(async () => await AddBusinessCardAsync());
         DeleteBusinessCardCommand = new RelayCommand(async () => await DeleteBusinessCardAsync(),
             () => SelectedBusinessCard is not null);
+    }
+
+    public async Task InitializeAsync() => await LoadBusinessCardsAsync();
+
+    private async Task LoadBusinessCardsAsync()
+    {
+        var entities = await _businessCardService.GetAllBusinessCardsAsync();
+
+        BusinessCards.Clear();
+
+        foreach (var entity in entities)
+        {
+            var viewModel = BusinessCardMapper.ToViewModel(entity);
+            BusinessCards.Add(viewModel);
+        }
+
+        SelectedBusinessCard = BusinessCards.FirstOrDefault();
     }
 
     private async Task SaveChangesAsync(bool fromCommand = false)

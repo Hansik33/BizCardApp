@@ -20,9 +20,14 @@ public class NavigationService(IServiceProvider serviceProvider) : INavigationSe
 
         var viewType = ViewLocator.ResolveViewType(typeof(TViewModel));
         var view = (UserControl)Activator.CreateInstance(viewType)!;
-        view.DataContext = serviceProvider.GetRequiredService<TViewModel>();
+
+        var viewModel = serviceProvider.GetRequiredService<TViewModel>();
+        view.DataContext = viewModel;
 
         _host.Content = view;
+
+        if (viewModel is IAsyncInitializable asyncInitializable)
+            _ = asyncInitializable.InitializeAsync();
     }
 
     public void GoToDashboard() => NavigateTo<DashboardViewModel>();

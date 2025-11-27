@@ -2,6 +2,7 @@
 using BizCardApp.Interfaces;
 using BizCardApp.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,6 +14,15 @@ public sealed class BusinessCardService(IDbContextFactory<AppDbContext> factory)
     {
         await using var appDbContext = await factory.CreateDbContextAsync(cancellationToken);
         return await appDbContext.Database.CanConnectAsync(cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<BusinessCard>> GetAllBusinessCardsAsync(CancellationToken cancellationToken = default)
+    {
+        await using var appDbContext = await factory.CreateDbContextAsync(cancellationToken);
+
+        return await appDbContext.BusinessCards
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<BusinessCard?> SaveBusinessCardAsync(BusinessCard businessCard, CancellationToken cancellationToken = default)
