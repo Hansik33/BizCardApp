@@ -29,10 +29,34 @@ public sealed class BusinessCardService(IDbContextFactory<AppDbContext> factory)
     {
         await using var appDbContext = await factory.CreateDbContextAsync(cancellationToken);
 
-        var entityEntry = await appDbContext.BusinessCards.AddAsync(businessCard, cancellationToken);
-        await appDbContext.SaveChangesAsync(cancellationToken);
+        if (businessCard.Id == 0)
+        {
+            var entityEntry = await appDbContext.BusinessCards.AddAsync(businessCard, cancellationToken);
 
-        return entityEntry.Entity;
+            await appDbContext.SaveChangesAsync(cancellationToken);
+
+            return entityEntry.Entity;
+        }
+        else
+        {
+            var existing = await appDbContext.BusinessCards
+                .FirstOrDefaultAsync(card => card.Id == businessCard.Id, cancellationToken);
+
+            if (existing is null)
+                return null;
+
+            existing.FirstName = businessCard.FirstName;
+            existing.LastName = businessCard.LastName;
+            existing.Company = businessCard.Company;
+            existing.JobTitle = businessCard.JobTitle;
+            existing.Phone = businessCard.Phone;
+            existing.Email = businessCard.Email;
+            existing.Address = businessCard.Address;
+
+            await appDbContext.SaveChangesAsync(cancellationToken);
+
+            return existing;
+        }
     }
 
     public async Task<bool> DeleteBusinessCardAsync(int id, CancellationToken cancellationToken = default)
