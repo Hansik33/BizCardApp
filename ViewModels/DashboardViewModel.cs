@@ -43,6 +43,9 @@ public partial class DashboardViewModel : BaseViewModel, IAsyncInitializable
                 OnPropertyChanged(nameof(BusinessCardForm));
                 (SaveChangesCommand as RelayCommand)?.RaiseCanExecuteChanged();
                 (DeleteBusinessCardCommand as RelayCommand)?.RaiseCanExecuteChanged();
+
+                if (_selectedBusinessCard != null)
+                    _selectedBusinessCard.PropertyChanged += SelectedBusinessCard_PropertyChanged;
             }
         }
     }
@@ -57,8 +60,10 @@ public partial class DashboardViewModel : BaseViewModel, IAsyncInitializable
         _businessCardService = businessCardService;
         _dialogService = dialogService;
 
-        SaveChangesCommand = new RelayCommand(async () => await SaveChangesAsync(fromCommand: true),
-            () => SelectedBusinessCard is not null);
+        SaveChangesCommand = new RelayCommand(
+            async () => await SaveChangesAsync(fromCommand: true),
+            () => SelectedBusinessCard is not null && SelectedBusinessCard.IsDirty);
+
         AddBusinessCardCommand = new RelayCommand(async () => await AddBusinessCardAsync());
         DeleteBusinessCardCommand = new RelayCommand(async () => await DeleteBusinessCardAsync(),
             () => SelectedBusinessCard is not null);
@@ -75,6 +80,7 @@ public partial class DashboardViewModel : BaseViewModel, IAsyncInitializable
         foreach (var entity in entities)
         {
             var viewModel = BusinessCardMapper.ToViewModel(entity);
+            viewModel.TakeSnapshot();
             BusinessCards.Add(viewModel);
         }
 
@@ -96,6 +102,8 @@ public partial class DashboardViewModel : BaseViewModel, IAsyncInitializable
                     return;
 
                 SelectedBusinessCard.Id = created.Id;
+                SelectedBusinessCard.TakeSnapshot();
+                (SaveChangesCommand as RelayCommand)?.RaiseCanExecuteChanged();
 
                 if (fromCommand)
                     await _dialogService.ShowMessageAsync(AppStrings.Dialogs.BusinessCard.UpdateSuccess,
@@ -177,16 +185,23 @@ public partial class DashboardViewModel : BaseViewModel, IAsyncInitializable
     private void AddNewBusinessCard()
     {
         var businessCard = _newBusinessCardDraft;
+
+        businessCard.TakeSnapshot();
         BusinessCards.Add(businessCard);
+
         SelectedBusinessCard = businessCard;
         _newBusinessCardDraft = new BusinessCardViewModel();
+
         OnPropertyChanged(nameof(BusinessCardForm));
     }
 
     private void AddEmptyBusinessCard()
     {
         var businessCard = new BusinessCardViewModel();
+
+        businessCard.TakeSnapshot();
         BusinessCards.Add(businessCard);
+
         SelectedBusinessCard = businessCard;
     }
 
@@ -202,5 +217,11 @@ public partial class DashboardViewModel : BaseViewModel, IAsyncInitializable
         SelectedBusinessCard = BusinessCards.Count == 0
             ? null
             : BusinessCards[Math.Clamp(index - 1, 0, BusinessCards.Count - 1)];
+    }
+
+    private void SelectedBusinessCard_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(BusinessCardViewModel.IsDirty))
+            (SaveChangesCommand as RelayCommand)?.RaiseCanExecuteChanged();
     }
 }
