@@ -52,6 +52,13 @@ public partial class DashboardViewModel : BaseViewModel, IAsyncInitializable
         }
     }
 
+    private bool _hasUnsavedChanges;
+    public bool HasUnsavedChanges
+    {
+        get => _hasUnsavedChanges;
+        private set => SetProperty(ref _hasUnsavedChanges, value);
+    }
+
     public ICommand SaveChangesCommand { get; }
     public ICommand AddBusinessCardCommand { get; }
     public ICommand DeleteBusinessCardCommand { get; }
@@ -68,7 +75,7 @@ public partial class DashboardViewModel : BaseViewModel, IAsyncInitializable
 
         AddBusinessCardCommand = new RelayCommand(
             async () => await AddBusinessCardAsync(),
-            () => BusinessCards.All(card => !card.IsDirty)
+            () => !HasUnsavedChanges
         );
 
         DeleteBusinessCardCommand = new RelayCommand(async () => await DeleteBusinessCardAsync(),
@@ -95,6 +102,8 @@ public partial class DashboardViewModel : BaseViewModel, IAsyncInitializable
         foreach (var businessCard in BusinessCards)
             businessCard.PropertyChanged += AnyBusinessCard_PropertyChanged;
 
+        UpdateHasUnsavedChanges();
+
         SelectedBusinessCard = BusinessCards.FirstOrDefault();
     }
 
@@ -117,6 +126,8 @@ public partial class DashboardViewModel : BaseViewModel, IAsyncInitializable
                 (SaveChangesCommand as RelayCommand)?.RaiseCanExecuteChanged();
                 (AddBusinessCardCommand as RelayCommand)?.RaiseCanExecuteChanged();
 
+                UpdateHasUnsavedChanges();
+
                 if (fromCommand)
                     await _dialogService.ShowMessageAsync(AppStrings.Dialogs.BusinessCard.UpdateSuccess,
                                                           Enums.DialogType.Success);
@@ -138,6 +149,8 @@ public partial class DashboardViewModel : BaseViewModel, IAsyncInitializable
             AddEmptyBusinessCard();
 
         await _dialogService.ShowMessageAsync(AppStrings.Dialogs.BusinessCard.AddSuccess, Enums.DialogType.Success);
+
+        UpdateHasUnsavedChanges();
     }
 
     private async Task DeleteBusinessCardAsync()
@@ -161,6 +174,8 @@ public partial class DashboardViewModel : BaseViewModel, IAsyncInitializable
         await _dialogService.ShowMessageAsync(
             AppStrings.Dialogs.BusinessCard.DeleteSuccess,
             Enums.DialogType.Success);
+
+        UpdateHasUnsavedChanges();
     }
 
     private async Task<bool> ValidateAndHandleErrorsBeforeSaveAsync()
@@ -207,6 +222,7 @@ public partial class DashboardViewModel : BaseViewModel, IAsyncInitializable
         _newBusinessCardDraft = new BusinessCardViewModel();
 
         OnPropertyChanged(nameof(BusinessCardForm));
+        UpdateHasUnsavedChanges();
     }
 
     private void AddEmptyBusinessCard()
@@ -219,6 +235,8 @@ public partial class DashboardViewModel : BaseViewModel, IAsyncInitializable
         businessCard.PropertyChanged += AnyBusinessCard_PropertyChanged;
 
         SelectedBusinessCard = businessCard;
+
+        UpdateHasUnsavedChanges();
     }
 
     private void DeleteBusinessCard()
@@ -235,20 +253,23 @@ public partial class DashboardViewModel : BaseViewModel, IAsyncInitializable
         SelectedBusinessCard = BusinessCards.Count == 0
             ? null
             : BusinessCards[Math.Clamp(index - 1, 0, BusinessCards.Count - 1)];
+
+        UpdateHasUnsavedChanges();
     }
 
     private void SelectedBusinessCard_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(BusinessCardViewModel.IsDirty))
             (SaveChangesCommand as RelayCommand)?.RaiseCanExecuteChanged();
-
     }
 
     private void AnyBusinessCard_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(BusinessCardViewModel.IsDirty))
+        {
             (AddBusinessCardCommand as RelayCommand)?.RaiseCanExecuteChanged();
-
+            UpdateHasUnsavedChanges();
+        }
     }
 
     private void BusinessCards_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -272,5 +293,11 @@ public partial class DashboardViewModel : BaseViewModel, IAsyncInitializable
         }
 
         (AddBusinessCardCommand as RelayCommand)?.RaiseCanExecuteChanged();
+        UpdateHasUnsavedChanges();
+    }
+
+    private void UpdateHasUnsavedChanges()
+    {
+        HasUnsavedChanges = BusinessCards.Any(businessCard => businessCard.IsDirty);
     }
 }
