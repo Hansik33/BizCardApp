@@ -15,6 +15,23 @@ public partial class BusinessCardViewModel : BaseViewModel
 
     public string FullName => $"{FirstName} {LastName}".Trim();
 
+    public string SnapshotFullName
+    {
+        get
+        {
+            if (IsDirty && _snapshot != null)
+            {
+                var snapName = $"{_snapshot.FirstName} {_snapshot.LastName}".Trim();
+                return $"* {snapName}";
+            }
+            else if (_snapshot != null)
+                return $"{_snapshot.FirstName} {_snapshot.LastName}".Trim();
+            else
+                return $"{FirstName} {LastName}".Trim();
+
+        }
+    }
+
     private string _firstName = string.Empty;
     public string FirstName
     {
@@ -24,6 +41,7 @@ public partial class BusinessCardViewModel : BaseViewModel
             if (SetProperty(ref _firstName, value))
             {
                 OnPropertyChanged(nameof(FullName));
+                OnPropertyChanged(nameof(SnapshotFullName));
                 OnPropertyChanged(nameof(IsDirty));
             }
         }
@@ -38,6 +56,7 @@ public partial class BusinessCardViewModel : BaseViewModel
             if (SetProperty(ref _lastName, value))
             {
                 OnPropertyChanged(nameof(FullName));
+                OnPropertyChanged(nameof(SnapshotFullName));
                 OnPropertyChanged(nameof(IsDirty));
             }
         }
@@ -50,7 +69,10 @@ public partial class BusinessCardViewModel : BaseViewModel
         set
         {
             if (SetProperty(ref _company, value))
+            {
+                OnPropertyChanged(nameof(SnapshotFullName));
                 OnPropertyChanged(nameof(IsDirty));
+            }
         }
     }
 
@@ -61,7 +83,10 @@ public partial class BusinessCardViewModel : BaseViewModel
         set
         {
             if (SetProperty(ref _jobTitle, value))
+            {
+                OnPropertyChanged(nameof(SnapshotFullName));
                 OnPropertyChanged(nameof(IsDirty));
+            }
         }
     }
 
@@ -72,7 +97,10 @@ public partial class BusinessCardViewModel : BaseViewModel
         set
         {
             if (SetProperty(ref _phone, value))
+            {
+                OnPropertyChanged(nameof(SnapshotFullName));
                 OnPropertyChanged(nameof(IsDirty));
+            }
         }
     }
 
@@ -83,7 +111,10 @@ public partial class BusinessCardViewModel : BaseViewModel
         set
         {
             if (SetProperty(ref _email, value))
+            {
+                OnPropertyChanged(nameof(SnapshotFullName));
                 OnPropertyChanged(nameof(IsDirty));
+            }
         }
     }
 
@@ -94,7 +125,10 @@ public partial class BusinessCardViewModel : BaseViewModel
         set
         {
             if (SetProperty(ref _address, value))
+            {
+                OnPropertyChanged(nameof(SnapshotFullName));
                 OnPropertyChanged(nameof(IsDirty));
+            }
         }
     }
 
@@ -113,6 +147,7 @@ public partial class BusinessCardViewModel : BaseViewModel
             Email = this.Email,
             Address = this.Address
         };
+        OnPropertyChanged(nameof(SnapshotFullName));
         OnPropertyChanged(nameof(IsDirty));
     }
 

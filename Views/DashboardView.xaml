@@ -27,7 +27,7 @@
                      SelectedItem="{Binding SelectedBusinessCard, Mode=TwoWay}">
                 <ListBox.ItemTemplate>
                     <DataTemplate x:DataType="viewmodels:BusinessCardViewModel">
-                        <TextBlock Text="{x:Bind FullName, Mode=OneWay}" />
+                        <TextBlock Text="{x:Bind SnapshotFullName, Mode=OneWay}" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
