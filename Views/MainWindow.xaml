@@ -16,5 +16,12 @@
     <Grid>
         <ContentControl x:Name="MainContent" x:FieldModifier="public"
                         HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+
+        <Button Click="InfoButton_Click"  IsTabStop="False"
+                Width="48" Height="48" Margin="0,0,32,32" CornerRadius="100"
+                HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                ToolTipService.ToolTip="Info">
+            <FontIcon Glyph="&#xE946;" FontFamily="Segoe MDL2 Assets"/>
+        </Button>
     </Grid>
 </Window>
