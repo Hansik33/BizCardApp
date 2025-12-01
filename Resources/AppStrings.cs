@@ -28,6 +28,10 @@ public static class AppStrings
             public const string DeleteConfirmation = "Czy na pewno chcesz usunąć tę wizytówkę?";
             public const string DeleteSuccess = "Wizytówka została pomyślnie usunięta.";
 
+            public const string ClosingWithoutSavingConfirmation =
+                "Wprowadzone zmiany nie zostały zapisane.\r\n" +
+                "Czy na pewno chcesz zamknąć okno bez zapisywania?";
+
             public static class Required
             {
                 public static class FirstName

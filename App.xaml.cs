@@ -48,7 +48,7 @@ public partial class App : Application
         services.AddSingleton<AppStartupService>();
 
         services.AddSingleton<MainWindow>();
-        services.AddTransient<DashboardViewModel>();
+        services.AddSingleton<DashboardViewModel>();
     }
 
     protected override void OnLaunched(LaunchActivatedEventArgs args) =>
