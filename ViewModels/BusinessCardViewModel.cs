@@ -151,6 +151,17 @@ public partial class BusinessCardViewModel : BaseViewModel
         OnPropertyChanged(nameof(IsDirty));
     }
 
+    public void Clear()
+    {
+        FirstName = _snapshot?.FirstName ?? string.Empty;
+        LastName = _snapshot?.LastName ?? string.Empty;
+        Company = _snapshot?.Company;
+        JobTitle = _snapshot?.JobTitle;
+        Phone = _snapshot?.Phone;
+        Email = _snapshot?.Email;
+        Address = _snapshot?.Address;
+    }
+
     public bool IsDirty =>
         _snapshot == null ||
         Id != _snapshot.Id ||

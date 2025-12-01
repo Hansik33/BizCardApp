@@ -62,6 +62,7 @@ public partial class DashboardViewModel : BaseViewModel, IAsyncInitializable
     public ICommand SaveChangesCommand { get; }
     public ICommand AddBusinessCardCommand { get; }
     public ICommand DeleteBusinessCardCommand { get; }
+    public ICommand ClearBusinessCardCommand { get; }
 
     public DashboardViewModel(IBusinessCardService businessCardService,
                               IDialogService dialogService)
@@ -80,6 +81,9 @@ public partial class DashboardViewModel : BaseViewModel, IAsyncInitializable
 
         DeleteBusinessCardCommand = new RelayCommand(async () => await DeleteBusinessCardAsync(),
             () => SelectedBusinessCard is not null);
+
+        ClearBusinessCardCommand = new RelayCommand(() => ClearBusinessCard(),
+            () => SelectedBusinessCard is not null && SelectedBusinessCard.IsDirty);
 
         BusinessCards.CollectionChanged += BusinessCards_CollectionChanged;
     }
@@ -178,6 +182,14 @@ public partial class DashboardViewModel : BaseViewModel, IAsyncInitializable
         UpdateHasUnsavedChanges();
     }
 
+    private void ClearBusinessCard()
+    {
+        if (SelectedBusinessCard is null)
+            return;
+
+        SelectedBusinessCard.Clear();
+    }
+
     private async Task<bool> ValidateAndHandleErrorsBeforeSaveAsync()
     {
         if (SelectedBusinessCard is null)
@@ -260,7 +272,11 @@ public partial class DashboardViewModel : BaseViewModel, IAsyncInitializable
     private void SelectedBusinessCard_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(BusinessCardViewModel.IsDirty))
+        {
             (SaveChangesCommand as RelayCommand)?.RaiseCanExecuteChanged();
+            (ClearBusinessCardCommand as RelayCommand)?.RaiseCanExecuteChanged();
+            UpdateHasUnsavedChanges();
+        }
     }
 
     private void AnyBusinessCard_PropertyChanged(object? sender, PropertyChangedEventArgs e)

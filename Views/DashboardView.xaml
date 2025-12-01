@@ -74,7 +74,16 @@
                     </Button.KeyboardAccelerators>
                     <FontIcon Glyph="&#xE8F8;" FontFamily="Segoe MDL2 Assets"/>
                 </Button>
-                
+
+                <Button Command="{Binding ClearBusinessCardCommand}" 
+                        Width="48" Height="48" 
+                        ToolTipService.ToolTip="Wyczyść (Ctrl + C)">
+                    <Button.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="C" Modifiers="Control" />
+                    </Button.KeyboardAccelerators>
+                    <FontIcon Glyph="&#xE894;" FontFamily="Segoe MDL2 Assets"/>
+                </Button>
+
             </StackPanel>
         </StackPanel>
         
