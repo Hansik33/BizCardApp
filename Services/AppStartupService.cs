@@ -1,32 +1,32 @@
 ﻿using BizCardApp.Interfaces;
+using BizCardApp.Resources;
 using BizCardApp.Views;
-using System;
 using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace BizCardApp.Services;
 
 public sealed class AppStartupService(MainWindow mainWindow,
-                                      INavigationService navigationService,
-                                      IBusinessCardService businessCardService)
+                                      IBusinessCardService businessCardService,
+                                      IDialogService dialogService,
+                                      INavigationService navigationService)
 {
     private bool _started;
 
     public async Task StartAsync()
     {
-        if (_started) return;
+        if (_started)
+            return;
+
         _started = true;
 
         mainWindow.Activate();
 
-        using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-
-        bool connected;
-        try { connected = await businessCardService.CanConnectAsync(cancellationTokenSource.Token); }
-        catch { connected = false; }
-
-        Debug.WriteLine(connected ? "DB: OK" : "DB: FAIL");
+        if (!await businessCardService.CanConnectAsync())
+        {
+            await dialogService.ShowMessageAsync(AppStrings.Dialogs.UnableToConnectDatabase, Enums.DialogType.Error);
+            Process.GetCurrentProcess().Kill();
+        }
 
         navigationService.Initialize(mainWindow.MainContent);
         navigationService.GoToDashboard();
