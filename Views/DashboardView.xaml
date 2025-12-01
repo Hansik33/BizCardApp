@@ -59,9 +59,9 @@
 
                 <Button Command="{Binding AddBusinessCardCommand}" 
                         Width="48" Height="48" 
-                        ToolTipService.ToolTip="Dodaj (Ctrl + A)">
+                        ToolTipService.ToolTip="Dodaj (Ctrl + N)">
                     <Button.KeyboardAccelerators>
-                        <KeyboardAccelerator Key="A" Modifiers="Control" />
+                        <KeyboardAccelerator Key="N" Modifiers="Control" />
                     </Button.KeyboardAccelerators>
                     <FontIcon Glyph="&#xE8FA;" FontFamily="Segoe MDL2 Assets"/>
                 </Button>
@@ -77,9 +77,9 @@
 
                 <Button Command="{Binding ClearBusinessCardCommand}" 
                         Width="48" Height="48" 
-                        ToolTipService.ToolTip="Wyczyść (Ctrl + C)">
+                        ToolTipService.ToolTip="Wyczyść (Ctrl + T)">
                     <Button.KeyboardAccelerators>
-                        <KeyboardAccelerator Key="C" Modifiers="Control" />
+                        <KeyboardAccelerator Key="T" Modifiers="Control" />
                     </Button.KeyboardAccelerators>
                     <FontIcon Glyph="&#xE894;" FontFamily="Segoe MDL2 Assets"/>
                 </Button>
