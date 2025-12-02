@@ -33,14 +33,14 @@ public partial class App : Application
     {
         var config = new ConfigurationBuilder()
             .SetBasePath(AppContext.BaseDirectory)
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
             .Build();
         services.AddSingleton<IConfiguration>(config);
 
         var connectionString = config.GetConnectionString("Default");
+        var serverVersion = new MySqlServerVersion(new Version(8, 0, 0));
 
-        services.AddPooledDbContextFactory<AppDbContext>(options =>
-            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+        services.AddPooledDbContextFactory<AppDbContext>(options => options.UseMySql(connectionString, serverVersion));
 
         services.AddSingleton<IBusinessCardService, BusinessCardService>();
         services.AddSingleton<INavigationService, NavigationService>();
@@ -51,6 +51,5 @@ public partial class App : Application
         services.AddSingleton<DashboardViewModel>();
     }
 
-    protected override void OnLaunched(LaunchActivatedEventArgs args) =>
-        _ = Services.GetRequiredService<AppStartupService>().StartAsync();
+    protected override void OnLaunched(LaunchActivatedEventArgs args) => _ = Services.GetRequiredService<AppStartupService>().StartAsync();
 }
