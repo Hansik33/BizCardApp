@@ -22,7 +22,7 @@ public sealed partial class MainWindow : Window
         AppWindow.Closing += OnWindowClosing;
     }
 
-    private async void InfoButton_Click(object sender, RoutedEventArgs e) => await _dialogService.ShowInfoAsync();
+    private async void InfoButton_Click(object _, RoutedEventArgs __) => await _dialogService.ShowInfoAsync();
 
     private async void OnWindowClosing(AppWindow sender, AppWindowClosingEventArgs args)
     {
